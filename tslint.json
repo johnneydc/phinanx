@@ -32,6 +32,7 @@
       true,
       140
     ],
+    "member-access": true,
     "member-ordering": [
       true,
       {
@@ -84,7 +85,8 @@
     },
     "typedef": [
       true,
-      "call-signature"
+      "call-signature",
+      "property-declaration"
     ],
     "typedef-whitespace": {
       "options": [
@@ -139,13 +141,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "phx",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "phx",
       "kebab-case"
     ]
   }
