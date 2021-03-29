@@ -1,19 +1,19 @@
-import {Component} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CliTerminalService} from '../service/cli-terminal.service';
 import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {CliInputComponent} from './cli-input.component';
 
 @Component({
   selector: 'phx-cli-main',
   template: `
-    <div class="cli-main-container" (click)="inputEl.focus()">
+    <div #containerEl class="cli-main-container">
       <div class="cli-main-content">
-        <div *ngFor="let line of lines$ | async">
+        <div class="cli-main-content-line" *ngFor="let line of lines$ | async">
           {{ line }}
         </div>
       </div>
       <div>
-        <input autofocus class="cli-main-input" #inputEl type="text" (keydown.enter)="sendLines(inputEl.value.slice()); inputEl.value = ''">
+        <phx-cli-input #cliInputCmp ></phx-cli-input>
       </div>
     </div>
   `,
@@ -26,11 +26,12 @@ import {map, tap} from 'rxjs/operators';
         width: 500px;
         background: #3b3b3b;
         font-family: monospace;
+        border-radius: 3px;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
       }
 
       .cli-main-content {
-        white-space: pre-wrap;
-        padding: 5px;
         flex: 1;
         width: 100%;
         box-sizing: border-box;
@@ -38,36 +39,72 @@ import {map, tap} from 'rxjs/operators';
         flex-direction: column;
         justify-content: flex-end;
         color: whitesmoke;
+        overflow: hidden;
       }
 
-      .cli-main-input {
-        background: none;
-        border: none;
-        padding: 6px 12px;
-        border-top: 1px solid #bbb;
-        height: 30px;
+      .cli-main-content-line {
         width: 100%;
         box-sizing: border-box;
-        font-family: monospace;
-        color: whitesmoke;
+        padding: 0 12px 3px;
+        word-break: break-word;
       }
     `
   ]
 })
-export class CliMainComponent {
+export class CliMainComponent implements AfterViewInit {
 
   public lines$: Observable<string[]>;
+
+  @ViewChild('containerEl')
+  private readonly containerEl!: ElementRef<HTMLDivElement>;
+
+  @ViewChild('cliInputCmp')
+  private readonly cliInputCmp!: CliInputComponent;
 
   constructor(
     private readonly cliTerminalService: CliTerminalService
   ) {
-    this.lines$ = this.cliTerminalService.getLines()
-      // .pipe(
-      //   map(lines => lines.reverse())
-      // );
+    this.lines$ = this.cliTerminalService.getLines();
+  }
+
+  public ngAfterViewInit(): void {
+    this.focusCli();
+    this.bindKeysForContainer();
+    this.bindScrollForContainer();
+    this.listenForInputEvents();
   }
 
   public sendLines(text: string): void {
     this.cliTerminalService.println(text);
+  }
+
+  private focusCli(): void {
+    this.cliInputCmp.focus();
+  }
+
+  private bindKeysForContainer(): void {
+    this.containerEl.nativeElement.onclick = ev => {
+      this.cliInputCmp.focus();
+    };
+  }
+
+  private listenForInputEvents(): void {
+    this.cliInputCmp.cliInput.subscribe(input => {
+      this.cliTerminalService.println(input.trim());
+    });
+
+    this.cliInputCmp.cliClear.subscribe(() => {
+      this.cliTerminalService.clear();
+    });
+  }
+
+  private bindScrollForContainer(): void {
+    this.containerEl.nativeElement.onwheel = ev => {
+      if (ev.deltaY < 0) {
+        this.cliTerminalService.scrollUp();
+      } else if (ev.deltaY > 0) {
+        this.cliTerminalService.scrollDown();
+      }
+    };
   }
 }
