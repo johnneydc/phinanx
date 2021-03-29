@@ -2,18 +2,18 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CliTerminalService} from '../service/cli-terminal.service';
 import {Observable} from 'rxjs';
 import {CliInputComponent} from './cli-input.component';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'phx-cli-main',
   template: `
     <div #containerEl class="cli-main-container">
       <div class="cli-main-content">
-        <div class="cli-main-content-line" *ngFor="let line of lines$ | async">
-          {{ line }}
+        <div class="cli-main-content-line" *ngFor="let line of lines$ | async" [innerHTML]="line">
         </div>
       </div>
       <div>
-        <phx-cli-input #cliInputCmp ></phx-cli-input>
+        <phx-cli-input #cliInputCmp></phx-cli-input>
       </div>
     </div>
   `,
@@ -62,7 +62,8 @@ export class CliMainComponent implements AfterViewInit {
   private readonly cliInputCmp!: CliInputComponent;
 
   constructor(
-    private readonly cliTerminalService: CliTerminalService
+    private readonly cliTerminalService: CliTerminalService,
+    private readonly sanitizer: DomSanitizer
   ) {
     this.lines$ = this.cliTerminalService.getLines();
   }
@@ -90,7 +91,12 @@ export class CliMainComponent implements AfterViewInit {
 
   private listenForInputEvents(): void {
     this.cliInputCmp.cliInput.subscribe(input => {
-      this.cliTerminalService.println(input.trim());
+      let sanitizedInput = input.trim().replace('>', '&gt;');
+      sanitizedInput = sanitizedInput.replace('<', '&lt;');
+
+      console.log(sanitizedInput);
+
+      this.cliTerminalService.println('> ' + sanitizedInput);
     });
 
     this.cliInputCmp.cliClear.subscribe(() => {
