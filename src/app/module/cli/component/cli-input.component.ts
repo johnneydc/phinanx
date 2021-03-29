@@ -4,24 +4,7 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild} f
   selector: 'phx-cli-input',
   template: `
     <input #inputEl class="cli-main-input" type="text" placeholder="Type '?' for more information.">
-  `,
-  styles: [`
-    .cli-main-input {
-      background: none;
-      border: none;
-      padding: 6px 12px;
-      border-top: 1px solid #444;
-      height: 30px;
-      width: 100%;
-      box-sizing: border-box;
-      font-family: monospace;
-      color: whitesmoke;
-    }
-
-    .cli-main-input:focus {
-      outline: none;
-    }
-  `]
+  `
 })
 export class CliInputComponent implements AfterViewInit {
 
