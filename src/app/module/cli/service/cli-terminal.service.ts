@@ -24,9 +24,14 @@ export class CliTerminalService {
   }
 
   public clear(): void {
-    this.lines = [];
-    this.scrollPointer = 0;
-    this.lines$.next(this.lines);
+    const fillerCount = Math.round(this.linesDisplayed);
+    const fillers = new Array(fillerCount).fill('&nbsp;');
+    // this.lines.push(...fillers);
+    // this.scrollPointer = this.lines.length - 1;
+    // this.lines$.next(this.lines);
+    fillers.forEach(filler => {
+      this.println(filler);
+    });
   }
 
   public scrollDown(): void {

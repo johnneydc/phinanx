@@ -1,21 +1,29 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
 import {CliTerminalService} from '../service/cli-terminal.service';
 import {Observable} from 'rxjs';
 import {CliInputComponent} from './cli-input.component';
 import {DomSanitizer} from '@angular/platform-browser';
+import {map} from 'rxjs/operators';
+import {ArrayUtil} from '../../shared/array.util';
 
 @Component({
   selector: 'phx-cli-main',
   template: `
     <div #containerEl class="cli-main-container">
       <div class="cli-main-content">
-        <div class="cli-main-content-line" *ngFor="let line of lines$ | async" [innerHTML]="line">
-        </div>
+        <ng-container *ngFor="let line of lines$ | async">
+          <div *ngIf="line !== ''; else emptyLine" class="cli-main-content-line" [innerHTML]="line">
+          </div>
+        </ng-container>
       </div>
       <div>
         <phx-cli-input #cliInputCmp></phx-cli-input>
       </div>
     </div>
+
+    <ng-template #emptyLine>
+      &nbsp;
+    </ng-template>
   `,
   styles: [
     `
@@ -46,7 +54,8 @@ import {DomSanitizer} from '@angular/platform-browser';
         width: 100%;
         box-sizing: border-box;
         padding: 0 12px 3px;
-        word-break: break-word;
+        /*word-break: break-word;*/
+        white-space: nowrap;
       }
     `
   ]
@@ -55,15 +64,19 @@ export class CliMainComponent implements AfterViewInit {
 
   public lines$: Observable<string[]>;
 
+  @Output()
+  public cmd: EventEmitter<string> = new EventEmitter<string>();
+
   @ViewChild('containerEl')
   private readonly containerEl!: ElementRef<HTMLDivElement>;
 
   @ViewChild('cliInputCmp')
   private readonly cliInputCmp!: CliInputComponent;
 
+  private maxLineChar = 67;
+
   constructor(
-    private readonly cliTerminalService: CliTerminalService,
-    private readonly sanitizer: DomSanitizer
+    private readonly cliTerminalService: CliTerminalService
   ) {
     this.lines$ = this.cliTerminalService.getLines();
   }
@@ -75,8 +88,13 @@ export class CliMainComponent implements AfterViewInit {
     this.listenForInputEvents();
   }
 
-  public sendLines(text: string): void {
-    this.cliTerminalService.println(text);
+  public printLn(text: string): void {
+    const chars = text.split('');
+    const chunks = ArrayUtil.chunks(chars, this.maxLineChar);
+
+    for (const chunk of chunks) {
+      this.cliTerminalService.println(chunk.join(''));
+    }
   }
 
   private focusCli(): void {
@@ -94,9 +112,8 @@ export class CliMainComponent implements AfterViewInit {
       let sanitizedInput = input.trim().replace('>', '&gt;');
       sanitizedInput = sanitizedInput.replace('<', '&lt;');
 
-      console.log(sanitizedInput);
-
-      this.cliTerminalService.println('> ' + sanitizedInput);
+      this.printLn('> ' + sanitizedInput);
+      this.cmd.emit(sanitizedInput);
     });
 
     this.cliInputCmp.cliClear.subscribe(() => {
