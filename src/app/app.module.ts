@@ -7,6 +7,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {CliModule} from './module/cli/cli.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {EvaluatorModule} from './module/evaluator/evaluator.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     CliModule,
-    DragDropModule
+    DragDropModule,
+    EvaluatorModule
   ],
   providers: [],
   bootstrap: [AppComponent]

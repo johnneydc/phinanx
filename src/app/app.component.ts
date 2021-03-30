@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {CliMainComponent} from './module/cli/component/cli-main.component';
-import {cmdParse} from './module/cmd-parser/cmd-parser';
+import {EvaluatorService} from './module/evaluator/evaluator.service';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +12,18 @@ export class AppComponent {
   @ViewChild('cliMainCmp')
   private readonly cliMainCmp!: CliMainComponent;
 
-  public parseCommand(command: string): void {
-    const parsedCmd = cmdParse(command);
-    this.cliMainCmp.printLn(JSON.stringify(parsedCmd));
-    this.cliMainCmp.printLn('');
+  constructor(
+    private readonly evaluatorService: EvaluatorService
+  ) { }
+
+  public async parseCommand(command: string): Promise<void> {
+    try {
+      const results = await this.evaluatorService.evaluate(command);
+      results.forEach(line => this.cliMainCmp.printLn(line));
+    } catch (e) {
+      this.cliMainCmp.printLn(e.message);
+    } finally {
+      this.cliMainCmp.printLn();
+    }
   }
 }

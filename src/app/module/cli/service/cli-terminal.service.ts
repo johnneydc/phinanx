@@ -1,37 +1,27 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {TerminalLine} from '../types/terminal-line';
 
 @Injectable()
 export class CliTerminalService {
 
-  private lines: string[] = [];
-  private readonly lines$ = new Subject<string[]>();
+  private lines: TerminalLine[] = [];
+  private readonly lines$ = new Subject<TerminalLine[]>();
   private scrollPointer = 0;
   private linesDisplayed = 27;
 
-  public println(text: string): void {
-    this.lines.push(text);
+  public printLn(line: TerminalLine): void {
+    this.lines.push(line);
     this.scrollPointer = this.lines.length - 1;
     this.lines$.next(this.lines);
   }
 
-  public getLines(): Observable<string[]> {
+  public getLines(): Observable<TerminalLine[]> {
     return this.lines$.asObservable()
       .pipe(
         map(lines => lines.slice(this.linesDisplayed * -1))
       );
-  }
-
-  public clear(): void {
-    const fillerCount = Math.round(this.linesDisplayed);
-    const fillers = new Array(fillerCount).fill('&nbsp;');
-    // this.lines.push(...fillers);
-    // this.scrollPointer = this.lines.length - 1;
-    // this.lines$.next(this.lines);
-    fillers.forEach(filler => {
-      this.println(filler);
-    });
   }
 
   public scrollDown(): void {
