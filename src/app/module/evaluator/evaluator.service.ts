@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {Command, NamedArg} from './command';
 import {Calc} from './commands/calc';
 import {CommandEvaluator} from './command-evaluator';
-import {ToMoney} from './commands/toMoney';
 
 @Injectable()
 export class EvaluatorService {
@@ -11,7 +10,6 @@ export class EvaluatorService {
 
   constructor() {
     this.setCommand(new Calc());
-    this.setCommand(new ToMoney());
   }
 
   public async evaluate(input: string): Promise<string[]> {
@@ -31,7 +29,7 @@ export class EvaluatorService {
 
       const evaluator = this.commands.get(cmd.command);
       if (!evaluator) {
-        throw new Error(`%s.red '${cmd.command}' command not found.`);
+        throw new Error(`'${cmd.command}' command not found.`);
       }
 
       resultFromLastCommand = await evaluator.evaluate(cmd);
