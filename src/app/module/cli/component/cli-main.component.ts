@@ -48,6 +48,7 @@ export class CliMainComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
+    this.displayBanner();
     this.focusCli();
     this.bindKeysForContainer();
     this.bindScrollForContainer();
@@ -118,5 +119,11 @@ export class CliMainComponent implements AfterViewInit {
     fillers.forEach(filler => {
       this.printLn(filler);
     });
+  }
+
+  private displayBanner(): void {
+    this.printLn('%b Welcome to \ns.ylw Phinanx!');
+    this.printLn('Start by typing \'?\'');
+    this.printLn('');
   }
 }

@@ -26,12 +26,12 @@ export class EvaluatorService {
       }
 
       if (resultFromLastCommand) {
-        cmd.subCommand = resultFromLastCommand[0];
+        cmd.subCommand = resultFromLastCommand.absValue;
       }
 
       const evaluator = this.commands.get(cmd.command);
       if (!evaluator) {
-        throw new Error(`'${cmd.command}' command not found.`);
+        throw new Error(`%s.red '${cmd.command}' command not found.`);
       }
 
       resultFromLastCommand = await evaluator.evaluate(cmd);
@@ -41,7 +41,7 @@ export class EvaluatorService {
       return ['No result.'];
     }
 
-    return resultFromLastCommand;
+    return resultFromLastCommand.lines;
   }
 
   private helpInfo(): string[] {

@@ -12,3 +12,8 @@ export interface NamedArg {
   longName?: string;
   value: string;
 }
+
+export interface CommandResult {
+  absValue: string;
+  lines: string[];
+}

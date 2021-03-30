@@ -1,5 +1,5 @@
 import {CommandEvaluator} from '../command-evaluator';
-import {Command} from '../command';
+import {Command, CommandResult} from '../command';
 
 export class ToMoney extends CommandEvaluator {
 
@@ -7,14 +7,17 @@ export class ToMoney extends CommandEvaluator {
     return 'toMoney';
   }
 
-  public async evaluate(cmd: Command): Promise<string[]> {
+  public async evaluate(cmd: Command): Promise<CommandResult> {
     if (cmd.subCommand === undefined) {
       throw new Error('Syntax error.');
     }
 
     const amount = parseFloat(cmd.subCommand);
+    const absValue = amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 
-    return [amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,')];
+    return {absValue,
+      lines: [`%b.grn ${absValue}`]
+    };
   }
 
   public getDescription(): string {

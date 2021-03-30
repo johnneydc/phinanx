@@ -21,7 +21,7 @@ export class AppComponent {
       const results = await this.evaluatorService.evaluate(command);
       results.forEach(line => this.cliMainCmp.printLn(line));
     } catch (e) {
-      this.cliMainCmp.printLn(e.message);
+      this.cliMainCmp.printLn('%s.red ' + e.message);
     } finally {
       this.cliMainCmp.printLn();
     }
