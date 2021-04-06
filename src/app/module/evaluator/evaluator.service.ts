@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Command, NamedArg} from './command';
 import {Calc} from './commands/calc';
 import {CommandEvaluator} from './command-evaluator';
+import {Copy} from './commands/copy';
 
 @Injectable()
 export class EvaluatorService {
@@ -10,6 +11,7 @@ export class EvaluatorService {
 
   constructor() {
     this.setCommand(new Calc());
+    this.setCommand(new Copy());
   }
 
   public async evaluate(input: string): Promise<string[]> {
