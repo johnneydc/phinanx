@@ -16,12 +16,13 @@ export abstract class Repository<T extends Model, Schema extends DBSchema> {
     await this.idb.delete(this.storeName(), obj.id);
   }
 
-  public async findById(id: StoreKey<Schema, StoreNames<Schema>>): Promise<T | null> {
+  public async findById(id: StoreKey<Schema, StoreNames<Schema>>): Promise<T> {
     return this.deserialize(await this.idb.get(this.storeName(), id));
   }
 
   public async findAll(): Promise<T[]> {
-    return await this.idb.getAll(this.storeName());
+    const entries = await this.idb.getAll(this.storeName());
+    return entries.map(x => this.deserialize(x));
   }
 
   public async countAll(): Promise<number> {
@@ -34,5 +35,5 @@ export abstract class Repository<T extends Model, Schema extends DBSchema> {
   }
 
   protected abstract storeName(): StoreNames<Schema>;
-  protected abstract deserialize(obj?: Partial<T>): T | null;
+  protected abstract deserialize(obj?: Partial<T>): T;
 }

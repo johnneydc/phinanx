@@ -38,9 +38,9 @@ export class EntryRepository extends Repository<Entry, PhinanxDB>{
     return 'entry';
   }
 
-  protected deserialize(obj?: Partial<Entry>): Entry | null {
+  protected deserialize(obj: Partial<Entry>): Entry {
     if (obj === undefined) {
-      return null;
+      throw new Error('Invalid argument for deserialization');
     }
 
     const entry = new Entry(obj);

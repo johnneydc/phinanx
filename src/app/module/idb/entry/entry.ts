@@ -23,7 +23,21 @@ export class Entry extends Model {
     this.accountTo = accountTo;
     this.category = 'uncategorized';
   }
+
+  private getVerbForType(): string {
+    switch (this.type) {
+      case 'in':
+        return 'Added';
+      case 'out':
+        return 'Paid';
+      case 'transfer':
+        return 'Transferred';
+      default:
+        return '';
+    }
+  }
+
   public toString(): string {
-    throw new Error('Method not implemented.');
+    return `${this.getVerbForType()} ${this.amount}`;
   }
 }

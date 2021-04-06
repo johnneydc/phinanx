@@ -13,11 +13,13 @@ function validateCommandIsRight(cmd: Command): void {
 
 export async function list(cmd: Command): Promise<CommandResult> {
   validateCommandIsRight(cmd);
-  const entries = await EntryRepository.get().getAll();
+  const entries = await EntryRepository.get().findAll();
 
   if (entries.length === 0) {
-    return new CommandResult(entries, ['No entries found.']);
+    return new CommandResult(entries, '', ['No entries found.']);
   }
 
-  return CommandResult.Empty();
+  const displayData = entries.map(entry => entry.toString());
+  console.log(displayData);
+  return new CommandResult(entries, entries.join(', '), ['%bEntries', ...displayData]);
 }

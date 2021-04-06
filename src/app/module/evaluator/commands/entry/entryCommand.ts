@@ -1,6 +1,7 @@
 import {CommandEvaluator} from '../../command-evaluator';
 import {Command, CommandResult} from '../../command';
 import {list} from './list';
+import {pay} from './pay';
 
 export class EntryCommand extends CommandEvaluator {
 
@@ -12,6 +13,8 @@ export class EntryCommand extends CommandEvaluator {
     switch (cmd.subCommand) {
       case 'list':
         return list(cmd);
+      case 'pay':
+        return pay(cmd);
       default:
         return CommandResult.Empty();
     }

@@ -4,6 +4,7 @@ import {Calc} from './commands/calc';
 import {CommandEvaluator} from './command-evaluator';
 import {Copy} from './commands/copy';
 import {EntryCommand} from './commands/entry/entryCommand';
+import {parse} from './parse';
 
 @Injectable()
 export class EvaluatorService {
@@ -21,7 +22,7 @@ export class EvaluatorService {
     let resultFromLastCommand = null;
 
     for (const inputCmd of inputCmds) {
-      const cmd = this.parse(inputCmd);
+      const cmd = parse(inputCmd);
 
       if (cmd.command === '?') {
         return this.helpInfo();
@@ -43,6 +44,8 @@ export class EvaluatorService {
       return ['No result.'];
     }
 
+    console.log(resultFromLastCommand);
+
     return resultFromLastCommand.lines;
   }
 
@@ -54,41 +57,6 @@ export class EvaluatorService {
     }
 
     return lines;
-  }
-
-  public parse(input: string, inputFromPrevCommand = false): Command {
-    const inputParts = input.trim().split(' ');
-    const namedArgs = this.parseNamedArgs(inputParts.slice(1));
-    const subCommand = inputParts[1];
-
-    return {
-      command: inputParts[0],
-      subCommand,
-      args: [...inputParts.slice(1)],
-      namedArgs,
-      raw: input,
-      inputFromPrevCommand,
-      inputData: null,
-      displayData: ''
-    };
-  }
-
-  private parseNamedArgs(args: string[]): NamedArg[] {
-    const namedArgs: NamedArg[] = [];
-
-    args.forEach((arg, i) => {
-      if (arg.includes('-')) {
-        const val = args[i + 1];
-
-        namedArgs.push({
-          name: arg,
-          value: val
-        });
-      }
-
-    });
-
-    return namedArgs;
   }
 
   private addCommand(cmdEvaluator: CommandEvaluator): void {
