@@ -10,9 +10,11 @@ export class Copy extends CommandEvaluator {
 
   public async evaluate(cmd: Command): Promise<CommandResult> {
     const absValue = cmd.subCommand || '';
-    await navigator.clipboard.writeText(cmd.subCommand || '');
+    await navigator.clipboard.writeText(cmd.displayData);
 
-    return { absValue,
+    return {
+      data: absValue,
+      displayData: absValue,
       lines: [`%b.grn ${absValue}\ns copied to clipboard.`]
     };
   }

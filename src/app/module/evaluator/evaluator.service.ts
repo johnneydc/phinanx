@@ -3,6 +3,7 @@ import {Command, NamedArg} from './command';
 import {Calc} from './commands/calc';
 import {CommandEvaluator} from './command-evaluator';
 import {Copy} from './commands/copy';
+import {EntryCommand} from './commands/entry/entryCommand';
 
 @Injectable()
 export class EvaluatorService {
@@ -10,8 +11,9 @@ export class EvaluatorService {
   private readonly commands: Map<string, CommandEvaluator> = new Map();
 
   constructor() {
-    this.setCommand(new Calc());
-    this.setCommand(new Copy());
+    this.addCommand(new Calc());
+    this.addCommand(new Copy());
+    this.addCommand(new EntryCommand());
   }
 
   public async evaluate(input: string): Promise<string[]> {
@@ -26,7 +28,7 @@ export class EvaluatorService {
       }
 
       if (resultFromLastCommand) {
-        cmd.subCommand = resultFromLastCommand.absValue;
+        cmd.inputData = resultFromLastCommand.data;
       }
 
       const evaluator = this.commands.get(cmd.command);
@@ -65,7 +67,9 @@ export class EvaluatorService {
       args: [...inputParts.slice(1)],
       namedArgs,
       raw: input,
-      inputFromPrevCommand
+      inputFromPrevCommand,
+      inputData: null,
+      displayData: ''
     };
   }
 
@@ -87,7 +91,7 @@ export class EvaluatorService {
     return namedArgs;
   }
 
-  private setCommand(cmdEvaluator: CommandEvaluator): void {
+  private addCommand(cmdEvaluator: CommandEvaluator): void {
     this.commands.set(cmdEvaluator.getCommand(), cmdEvaluator);
   }
 }
