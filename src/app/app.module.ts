@@ -8,6 +8,7 @@ import { environment } from '../environments/environment';
 import {CliModule} from './module/cli/cli.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {EvaluatorModule} from './module/evaluator/evaluator.module';
+import {dbInit} from './module/idb/config';
 
 @NgModule({
   declarations: [
@@ -24,4 +25,8 @@ import {EvaluatorModule} from './module/evaluator/evaluator.module';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    dbInit();
+  }
+}
