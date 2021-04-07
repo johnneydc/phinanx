@@ -20,7 +20,7 @@ export abstract class CommandEvaluator {
     const subCommand = this.subCommands.get(cmd.subCommand);
 
     if (subCommand === undefined) {
-      throw new Error(`Sub-command ${cmd.subCommand} does not exist on ${this.getCommand()} command.`);
+      throw new Error(`'${cmd.subCommand}' sub-command not found in '${this.getCommand()}' command.`);
     }
 
     return subCommand.action(subCommandDirective);
@@ -38,7 +38,7 @@ export abstract class CommandEvaluator {
     const lines = [`Sub-commands for '${this.getCommand()}':`, ''];
 
     for (const [name, evaluator] of this.subCommands.entries()) {
-      lines.push(`%b.pnk ${name}\ns - ${evaluator.getDescription()}`);
+      lines.push(`%s.pnk ${name}\ns - ${evaluator.getDescription()}`);
     }
 
     return new CommandResult(null, '', lines);

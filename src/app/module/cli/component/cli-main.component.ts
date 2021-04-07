@@ -94,7 +94,7 @@ export class CliMainComponent implements AfterViewInit {
       let sanitizedInput = input.trim().replace('>', '&gt;');
       sanitizedInput = sanitizedInput.replace('<', '&lt;');
 
-      this.printLn('<span class="cyn">&gt;</span> ' + sanitizedInput);
+      this.printLn('<span class="grn">→</span> ' + sanitizedInput);
       this.cmd.emit(sanitizedInput);
     });
 

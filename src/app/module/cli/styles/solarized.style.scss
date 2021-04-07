@@ -1,5 +1,8 @@
 @import "solarized.scheme";
 
+$fontFam: 'Consolas', monospace;
+$fontSize: 13px;
+
 .solarized {
   .cli-main-container {
     display: flex;
@@ -7,10 +10,10 @@
     height: 500px;
     width: 500px;
     background: $base02;
-    font-family: monospace;
     border-radius: 3px;
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1), 0 5px 10px rgba(0, 0, 0, 0.2);
     overflow: hidden;
+    transform: translateZ(0);
   }
 
   .cli-main-content {
@@ -22,6 +25,8 @@
     justify-content: flex-end;
     color: $base1;
     overflow: hidden;
+    font-family: $fontFam;
+    font-size: $fontSize;
   }
 
   .cli-main-content-line {
@@ -42,6 +47,8 @@
     box-sizing: border-box;
     font-family: monospace;
     color: $base1;
+    font-family: $fontFam;
+    font-size: $fontSize;
   }
 
   .cli-main-input:focus {
