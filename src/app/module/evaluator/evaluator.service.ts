@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Command, NamedArg} from './command';
 import {Calc} from './commands/calc';
 import {CommandEvaluator} from './command-evaluator';
 import {Copy} from './commands/copy';
@@ -30,6 +29,7 @@ export class EvaluatorService {
 
       if (resultFromLastCommand) {
         cmd.inputData = resultFromLastCommand.data;
+        cmd.displayData = resultFromLastCommand.displayData;
       }
 
       const evaluator = this.commands.get(cmd.command);
@@ -37,14 +37,12 @@ export class EvaluatorService {
         throw new Error(`'${cmd.command}' command not found.`);
       }
 
-      resultFromLastCommand = await evaluator.evaluate(cmd);
+      resultFromLastCommand = await evaluator.process(cmd);
     }
 
     if (!resultFromLastCommand) {
       return ['No result.'];
     }
-
-    console.log(resultFromLastCommand);
 
     return resultFromLastCommand.lines;
   }

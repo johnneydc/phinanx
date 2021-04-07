@@ -16,15 +16,13 @@ export interface NamedArg {
 }
 
 export class CommandResult {
-  public readonly data: unknown;
-  public readonly lines: string[];
-  public readonly displayData: string;
 
-  constructor(data: unknown, displayData: string, lines: string[]) {
-    this.data = data;
-    this.lines = lines;
-    this.displayData = displayData;
-  }
+  constructor(
+    public readonly data: unknown,
+    public readonly displayData: string,
+    public readonly lines: string[],
+    public readonly complete = true
+  ) { }
 
   public static Empty(): CommandResult {
     return new CommandResult(null, '', ['']);

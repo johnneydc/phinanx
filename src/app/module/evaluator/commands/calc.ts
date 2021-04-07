@@ -8,16 +8,12 @@ export class Calc extends CommandEvaluator {
     return 'calc';
   }
 
-  public async evaluate(cmd: Command): Promise<CommandResult> {
+  protected async action(cmd: Command): Promise<CommandResult> {
     const mathExpr = cmd.raw.replace('calc ', '');
     const value = math.evaluate(mathExpr);
     const prntValue = value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
 
-    return {
-      data: value,
-      displayData: prntValue,
-      lines: [`%b.grn ${prntValue}`]
-    };
+    return new CommandResult(value, prntValue, [`%b.grn ${prntValue}`]);
   }
 
   public getDescription(): string {
