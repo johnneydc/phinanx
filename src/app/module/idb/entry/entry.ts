@@ -1,5 +1,6 @@
 import {Model} from '../model';
 import {v4} from 'uuid';
+import {formatDate, formatNumber} from '@angular/common';
 
 export type EntryType = 'in' | 'out' | 'transfer';
 export type EntryCategory = string | 'uncategorized';
@@ -38,6 +39,22 @@ export class Entry extends Model {
   }
 
   public toString(): string {
-    return `${this.getVerbForType()} ${this.amount}`;
+    return `%s ${this.formattedDate()}  \ns.gry |\ns  ${this.getVerbForType()}\ns.ylw ${this.getAmountDisplay()}\ns for ${this.category} from ${this.deductFrom}`;
+  }
+
+  private formattedDate(): string {
+    if (this.datePosted === undefined) {
+      return '';
+    }
+
+    return formatDate(this.datePosted, 'shortDate', 'en');
+  }
+
+  private getAmountDisplay(): string {
+    if (this.amount === undefined) {
+      return '';
+    }
+
+    return formatNumber(this.amount, 'en', '1.2');
   }
 }

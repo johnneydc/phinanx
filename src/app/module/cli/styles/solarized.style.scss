@@ -86,4 +86,8 @@ $fontSize: 13px;
   .grn {
     color: $green;
   }
+
+  .gry {
+    color: transparentize($base1, 0.8);
+  }
 }
