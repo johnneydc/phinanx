@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'phx-cli-input',
@@ -17,12 +17,14 @@ export class CliInputComponent implements AfterViewInit {
   @ViewChild('inputEl')
   private readonly inputEl!: ElementRef<HTMLInputElement>;
 
-  private readonly inputHistory: string[] = [];
-
+  private inputHistory: string[] = [];
   private inputHistoryCursor = 0;
+
+  private static InputHistoryKey = 'phinanx::terminal.history';
 
   public ngAfterViewInit(): void {
     this.bindKeys();
+    this.loadHistory();
   }
 
   public focus(): void {
@@ -92,5 +94,16 @@ export class CliInputComponent implements AfterViewInit {
     this.inputHistoryCursor = this.inputHistoryCursor > this.inputHistory.length ? this.inputHistory.length : this.inputHistoryCursor;
 
     this.setInputValue(this.inputHistory[this.inputHistoryCursor]);
+  }
+
+  private loadHistory(): void {
+    const rawPrevHistory = localStorage.getItem(CliInputComponent.InputHistoryKey) || '';
+    this.inputHistory = rawPrevHistory.split('//');
+    this.inputHistoryCursor = this.inputHistory.length;
+  }
+
+  @HostListener('window:beforeunload')
+  public saveHistory(): void {
+    localStorage.setItem(CliInputComponent.InputHistoryKey, this.inputHistory.join('//'));
   }
 }
