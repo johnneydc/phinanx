@@ -68,15 +68,6 @@ export class CliMainComponent implements AfterViewInit {
     }
 
     this.cliTerminalService.printLn(line);
-
-    // // const chars = text.split('');
-    // // const chunks = ArrayUtil.chunks(chars, this.maxLineChar);
-    // //
-    // const chunks = TerminalLine.chunkify(67);
-    //
-    // for (const chunk of chunks) {
-    //   this.cliTerminalService.printLn(chunk);
-    // }
   }
 
   private focusCli(): void {
@@ -104,13 +95,13 @@ export class CliMainComponent implements AfterViewInit {
   }
 
   private bindScrollForContainer(): void {
-    this.containerEl.nativeElement.onwheel = ev => {
+    this.containerEl.nativeElement.addEventListener('wheel', ev => {
       if (ev.deltaY < 0) {
         this.cliTerminalService.scrollUp();
       } else if (ev.deltaY > 0) {
         this.cliTerminalService.scrollDown();
       }
-    };
+    }, { passive: true });
   }
 
   private clearTerminal(): void {
