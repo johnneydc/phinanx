@@ -39,7 +39,7 @@ export class Entry extends Model {
   }
 
   public toString(): string {
-    return `%s ${this.formattedDate()}  \ns.gry |\ns  ${this.getVerbForType()}\ns.ylw ${this.getAmountDisplay()}\ns for ${this.category} from ${this.deductFrom}`;
+    return `%s ${this.shortId()} \ns.gry |\ns ${this.formattedDate()}  \ns.gry |\ns  ${this.getVerbForType()}\ns.ylw ${this.getAmountDisplay()}\ns for ${this.category} from ${this.deductFrom}`;
   }
 
   private formattedDate(): string {
@@ -56,5 +56,9 @@ export class Entry extends Model {
     }
 
     return formatNumber(this.amount, 'en', '1.2');
+  }
+
+  private shortId(): string {
+    return this.id?.split('-')[0] || '';
   }
 }
