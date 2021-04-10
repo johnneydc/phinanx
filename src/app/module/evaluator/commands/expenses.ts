@@ -1,8 +1,8 @@
-import {Command, CommandResult} from '../../command';
-import {EntryRepository} from '../../../idb/entry/entry-repository';
-import {CommandEvaluator} from '../../command-evaluator';
+import {Command, CommandResult} from '../command';
+import {EntryRepository} from '../../idb/entry/entry-repository';
+import {CommandEvaluator} from '../command-evaluator';
 
-export class EntryList extends CommandEvaluator {
+export class Expenses extends CommandEvaluator {
   public async action(cmd: Command): Promise<CommandResult> {
     const entries = await EntryRepository.get().findAll();
 
@@ -15,10 +15,10 @@ export class EntryList extends CommandEvaluator {
   }
 
   public getCommand(): string {
-    return 'list';
+    return 'expenses';
   }
 
   public getDescription(): string {
-    return 'Lists entries filtered by date. Defaults to showing all.';
+    return 'Lists expenses made. Filtered by date.';
   }
 }

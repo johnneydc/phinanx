@@ -1,10 +1,10 @@
 import {Command, CommandResult} from '../../command';
 import {parse} from '../../parse';
-import {Entry} from '../../../idb/entry/entry';
+import {Entry, EntryType} from '../../../idb/entry/entry';
 import {EntryRepository} from '../../../idb/entry/entry-repository';
 import {CommandEvaluator} from '../../command-evaluator';
 
-export class EntryPay extends CommandEvaluator {
+export class MoneyPay extends CommandEvaluator {
 
   protected async action(cmd: Command): Promise<CommandResult> {
     const reParsedCmd = parse(cmd.args.join(' '));
@@ -14,7 +14,7 @@ export class EntryPay extends CommandEvaluator {
     const entry = new Entry({
       datePosted: new Date(),
       amount,
-      type: 'out',
+      type: EntryType.out,
       deductFrom
     });
 
@@ -29,6 +29,6 @@ export class EntryPay extends CommandEvaluator {
   }
 
   public getDescription(): string {
-    return 'Records an entry as an expense deducted to an account.';
+    return 'Pays for an expense deducted to an account.';
   }
 }

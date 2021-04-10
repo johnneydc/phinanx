@@ -2,36 +2,39 @@ import {Model} from '../model';
 import {v4} from 'uuid';
 import {formatDate, formatNumber} from '@angular/common';
 
-export type EntryType = 'in' | 'out' | 'transfer';
+export enum EntryType {
+  'in', 'out', 'transfer'
+}
 export type EntryCategory = string | 'uncategorized';
 
 export class Entry extends Model {
-  public datePosted?: Date;
+  public datePosted: Date;
   public type?: EntryType;
-  public deductFrom?: string;
-  public accountTo?: string;
-  public amount?: number;
+  public deductFrom: string;
+  public accountTo: string;
+  public amount: number;
 
-  public detail?: string;
-  public category?: EntryCategory;
+  public detail: string;
+  public category: EntryCategory;
 
-  constructor({datePosted, amount, type, deductFrom, accountTo}: Partial<Entry>) {
+  constructor({datePosted, amount, type, deductFrom, accountTo, category, detail}: Partial<Entry>) {
     super(v4());
-    this.datePosted = datePosted;
-    this.amount = amount;
+    this.datePosted = datePosted || new Date();
+    this.amount = amount || 0;
     this.type = type;
-    this.deductFrom = deductFrom;
-    this.accountTo = accountTo;
-    this.category = 'uncategorized';
+    this.deductFrom = deductFrom || '';
+    this.accountTo = accountTo || '';
+    this.category = category || 'uncategorized';
+    this.detail = detail || '';
   }
 
   private getVerbForType(): string {
     switch (this.type) {
-      case 'in':
+      case EntryType.in:
         return 'Added';
-      case 'out':
+      case EntryType.out:
         return 'Paid';
-      case 'transfer':
+      case EntryType.transfer:
         return 'Transferred';
       default:
         return '';
@@ -39,7 +42,7 @@ export class Entry extends Model {
   }
 
   public toString(): string {
-    return `%s ${this.shortId()} \ns.gry |\ns ${this.formattedDate()}  \ns.gry |\ns  ${this.getVerbForType()}\ns.ylw ${this.getAmountDisplay()}\ns for ${this.category} from ${this.deductFrom}`;
+    return `%s ${this.shortId()} \ns.gry |\ns ${this.formattedDate()}  \ns.gry |\ns ${this.getVerbForType()}\ns.ylw ${this.getAmountDisplay()}\ns for ${this.category} from ${this.deductFrom}`;
   }
 
   private formattedDate(): string {
@@ -59,6 +62,6 @@ export class Entry extends Model {
   }
 
   private shortId(): string {
-    return this.id?.split('-')[0] || '';
+    return this.id?.split('-').shift() || '';
   }
 }

@@ -44,9 +44,7 @@ export class EntryRepository extends Repository<Entry, PhinanxDB>{
     }
 
     const entry = new Entry(obj);
-    entry.detail = obj.detail;
     entry.id = obj.id || '';
-    entry.category = obj.category;
     entry.dateCreated = obj.dateCreated;
     entry.dateModified = obj.dateModified;
 

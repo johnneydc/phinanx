@@ -15,7 +15,7 @@ export async function dbInit(): Promise<void> {
 }
 
 export async function getTestDb(): Promise<IDBPDatabase<PhinanxDB>> {
-  const testDbName = 'testDb';
+  const testDbName = 'phinanx:test';
   await deleteDB(testDbName);
   const db = await openDB<PhinanxDB>(testDbName, version, { upgrade });
 
