@@ -10,7 +10,7 @@ Sentry.init({
   dsn: 'https://c65422d8353849d78e50bed326ddf4c2@o578076.ingest.sentry.io/5734089',
   integrations: [
     new Integrations.BrowserTracing({
-      tracingOrigins: ['localhost', 'https://yourserver.io/api'],
+      tracingOrigins: ['localhost', 'https://phinanx.johnneydc.com/'],
       routingInstrumentation: Sentry.routingInstrumentation,
     }),
   ],
