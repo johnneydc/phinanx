@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +9,9 @@ import {CliModule} from './module/cli/cli.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {EvaluatorModule} from './module/evaluator/evaluator.module';
 import {dbInit} from './module/idb/config';
+
+import * as Sentry from '@sentry/angular';
+import {Router} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,24 @@ import {dbInit} from './module/idb/config';
     DragDropModule,
     EvaluatorModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useValue: Sentry.createErrorHandler({
+        showDialog: true,
+      }),
+    },
+    {
+      provide: Sentry.TraceService,
+      deps: [Router],
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => () => {},
+      deps: [Sentry.TraceService],
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
