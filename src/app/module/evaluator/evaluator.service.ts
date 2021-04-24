@@ -12,7 +12,7 @@ export class EvaluatorService {
   private readonly commands: Map<string, CommandEvaluator> = new Map();
 
   constructor() {
-    this.addCommand(new Calc());
+    // this.addCommand(new Calc());
     this.addCommand(new Copy());
     this.addCommand(new Money());
     this.addCommand(new Expenses());

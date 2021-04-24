@@ -1,6 +1,6 @@
 import {CommandEvaluator} from '../command-evaluator';
 import {Command, CommandResult} from '../command';
-import * as math from 'mathjs';
+// import {evaluate} from 'mathjs';
 
 export class Calc extends CommandEvaluator {
 
@@ -9,11 +9,12 @@ export class Calc extends CommandEvaluator {
   }
 
   protected async action(cmd: Command): Promise<CommandResult> {
-    const mathExpr = cmd.raw.replace('calc ', '');
-    const value = math.evaluate(mathExpr);
-    const prntValue = value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
-
-    return new CommandResult(value, prntValue, [`%b.grn ${prntValue}`]);
+    // const mathExpr = cmd.raw.replace('calc ', '');
+    // const value = evaluate(mathExpr);
+    // const prntValue = value.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+    //
+    // return new CommandResult(value, prntValue, [`%b.grn ${prntValue}`]);
+    return CommandResult.Empty();
   }
 
   public getDescription(): string {
