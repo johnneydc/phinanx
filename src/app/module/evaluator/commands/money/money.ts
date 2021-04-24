@@ -17,6 +17,6 @@ export class Money extends CommandEvaluator {
   }
 
   public getDescription(): string {
-    return 'Transfer, receive, or pay with your money.';
+    return 'Record the movement of your money.';
   }
 }

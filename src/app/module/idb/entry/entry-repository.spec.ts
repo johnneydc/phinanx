@@ -1,6 +1,6 @@
 import {EntryRepository} from './entry-repository';
 import {getTestDb} from '../config';
-import {Entry} from './entry';
+import {Entry, EntryType} from './entry';
 
 describe('EntryRepository', () => {
   let entryRepository: EntryRepository;
@@ -18,7 +18,7 @@ describe('EntryRepository', () => {
     const entry = new Entry({
       datePosted: new Date(),
       amount: 10,
-      type: 'in',
+      type: EntryType.in,
       deductFrom: '1',
       accountTo: '2'
     });
@@ -37,7 +37,7 @@ describe('EntryRepository', () => {
     const entry = new Entry({
       datePosted: new Date(),
       amount: 10,
-      type: 'in',
+      type: EntryType.in,
       deductFrom: '1',
       accountTo: '2'
     });
@@ -52,7 +52,7 @@ describe('EntryRepository', () => {
     const entry = new Entry({
       datePosted: new Date(),
       amount: 10,
-      type: 'in',
+      type: EntryType.in,
       deductFrom: '1',
       accountTo: '2'
     });
@@ -81,7 +81,7 @@ describe('EntryRepository', () => {
     const entry = new Entry({
       datePosted: new Date(),
       amount: 10,
-      type: 'in',
+      type: EntryType.in,
       deductFrom: '1',
       accountTo: '2'
     });
