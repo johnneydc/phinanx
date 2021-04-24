@@ -10,7 +10,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {EvaluatorModule} from './module/evaluator/evaluator.module';
 import {dbInit} from './module/idb/config';
 
-import * as Sentry from '@sentry/angular';
+import {createErrorHandler, TraceService} from '@sentry/angular';
 import {Router} from '@angular/router';
 
 @NgModule({
@@ -28,18 +28,18 @@ import {Router} from '@angular/router';
   providers: [
     {
       provide: ErrorHandler,
-      useValue: Sentry.createErrorHandler({
+      useValue: createErrorHandler({
         showDialog: true,
       }),
     },
     {
-      provide: Sentry.TraceService,
+      provide: TraceService,
       deps: [Router],
     },
     {
       provide: APP_INITIALIZER,
       useFactory: () => () => {},
-      deps: [Sentry.TraceService],
+      deps: [TraceService],
       multi: true,
     }
   ],
